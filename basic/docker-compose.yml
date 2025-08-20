@@ -11,7 +11,6 @@ x-shared-build-args: &shared-build-args
     
 # Shared environment for runtime
 x-shared-environment: &shared-environment
-  SPL_BROKER_URL: amqp://fluxuser:fluxrabbit@rabbit:5672//
   mainHost: node-1
   workdir: /code/workdir
   <<: *workers
@@ -22,18 +21,6 @@ x-shared-volumes: &shared-volumes
   - ./:/code/workdir
 
 services:
-  rabbit:
-    restart: always
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - 5672:5672
-      - 15672:15672
-    networks:
-      - rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_USER=fluxuser
-      - RABBITMQ_DEFAULT_PASS=fluxrabbit
    
   node-1:
     build:
@@ -41,8 +28,6 @@ services:
       args: *shared-build-args
     hostname: node-1
     container_name: node-1
-    networks:
-      - rabbitmq
     environment: *shared-environment
     volumes: *shared-volumes
 
@@ -52,8 +37,6 @@ services:
       args: *shared-build-args
     hostname: node-2      
     container_name: node-2
-    networks:
-      - rabbitmq
     environment: *shared-environment
     volumes: *shared-volumes
 
@@ -63,8 +46,6 @@ services:
       args: *shared-build-args
     hostname: node-3
     container_name: node-3
-    networks:
-      - rabbitmq
     environment: *shared-environment
     volumes: *shared-volumes
 
@@ -74,11 +55,6 @@ services:
       args: *shared-build-args
     container_name: node-4
     hostname: node-4
-    networks:
-      - rabbitmq
     environment: *shared-environment
     volumes: *shared-volumes
 
-networks:
-  rabbitmq:
-    driver: bridge
