@@ -48,6 +48,9 @@ sudo cat /etc/flux/system/R
 printf "\n🦊 Independent Minister of Privilege\n"
 cat /etc/flux/imp/conf.d/imp.toml
 
+printf "\nStarting munged\n"
+sudo -u munge /usr/sbin/munged
+
 # The curve cert is generated on container build
 # We assume the munge.key is the same also since we use the same base container!
 # located at /etc/munge/munge.key

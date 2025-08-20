@@ -19,6 +19,14 @@ x-shared-volumes: &shared-volumes
   - ./flux/imp.toml:/etc/flux/imp/conf.d/imp.toml
   - ./flux/broker.toml:/etc/flux/config/broker.toml
   - ./:/code/workdir
+  - shared:/shared
+
+volumes:
+  shared:
+
+networks:
+  flux:
+    driver: bridge
 
 services:
    
@@ -28,6 +36,8 @@ services:
       args: *shared-build-args
     hostname: node-1
     container_name: node-1
+    networks:
+      - flux
     environment: *shared-environment
     volumes: *shared-volumes
 
@@ -37,6 +47,8 @@ services:
       args: *shared-build-args
     hostname: node-2      
     container_name: node-2
+    networks:
+      - flux
     environment: *shared-environment
     volumes: *shared-volumes
 
@@ -46,6 +58,8 @@ services:
       args: *shared-build-args
     hostname: node-3
     container_name: node-3
+    networks:
+      - flux
     environment: *shared-environment
     volumes: *shared-volumes
 
@@ -55,6 +69,8 @@ services:
       args: *shared-build-args
     container_name: node-4
     hostname: node-4
+    networks:
+      - flux
     environment: *shared-environment
     volumes: *shared-volumes
 
