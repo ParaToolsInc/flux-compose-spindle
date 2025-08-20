@@ -4,16 +4,8 @@
 
 This workflow includes:
 
-1. A Flux container defined in the [Dockerfile](Dockerfile) with a rabbit client.
-2. A rabbit service defined in the [docker-compose.yml](docker-compose.yml) to get it running alongside manually specified nodes.
+1. A Flux container defined in the [Dockerfile](Dockerfile) with Spindle.
 
-This example is different from [the replicas one](../replicas) that uses deploy->replicas instead of a manually
-derived listing. The reason we need to do this is because with the first approach, we cannot give the containers
-reliable host names. For this approach we can!
-
-The rabbit service is just provided as an example that you can have a service alongside your
-cluster. Since we are doing this, we install [pika](https://www.rabbitmq.com/tutorials/tutorial-one-python.html)
-and provide a [scripts/job.py](scripts/job.py) to submit to Flux that mostly does silly things.
  
 ## Usage
 
@@ -84,33 +76,34 @@ $ flux overlay status
 └─ 3 node-4: full
 ```
 
-At this point, let's try communicating with rabbit. The dummy credentials
-are hard coded in our example script (I know, I'm a terrible person):
+Let's demonstrate that Spindle works:
 
 ```bash
-python3 job.py
+cd /shared
+export SPINDLE_DEBUG=2
+flux run -o userrc=/home/fluxuser/Spindle-inst/etc/spindle/spindle.rc -o spindle -n4 hostname
 ```
 ```console
-👋️ Sent 'Hello World!'
+node-1
+node-4
+node-3
+node-2
 ```
 
-Now try running with Flux:
-
+Now check the directory for the debug output. If Spindle worked, there should be four files, one for each node:
 ```bash
-flux run python3 job.py
-flux submit python3 job.py 
-ƒVL9T1RZ
+ls -l
+```
+```console
+total 108
+-rw-r----- 1 fluxuser fluxuser 30164 Aug 20 23:56 spindle_output.node-1.132
+-rw-r----- 1 fluxuser fluxuser 22748 Aug 20 23:56 spindle_output.node-2.70
+-rw-r----- 1 fluxuser fluxuser 26690 Aug 20 23:56 spindle_output.node-3.70
+-rw-r----- 1 fluxuser fluxuser 23539 Aug 20 23:56 spindle_output.node-4.75
+
 ```
 
-And get the logs:
-
-```bash
-flux job attach $(flux job last)
-👋️ Sent 'Hello World!'
-```
-
-And that should be enough to get you started with your (much cooler) workflows.
-Have fun!
+It worked!
 
 ### 3. Clean up
 
@@ -172,9 +165,3 @@ a few places:
 
 It also doesn't hurt to do a grep for "basic" if you think you missed one!
 
-## Development Notes
-
-### Logs 
-
-The rabbit logs are currently set to write in the container, as we cannot surprise the user to write to their filesystem. Note that
-you can add volumes if you want to save them locally, and it's recommended to write to the local directory and not a system volume.
