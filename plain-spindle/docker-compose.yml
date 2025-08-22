@@ -1,0 +1,8 @@
+services:
+  spindlenode:
+    build:
+      context: ./
+    hostname: spindlenode
+    container_name: spindlenode
+    tty: true
+

@@ -3,12 +3,12 @@
 This is an adaptation of https://github.com/rse-ops/flux-compose for use with Spindle.
 There is currently one example:
 
- - [basic-spindle](basic-spindle): a setup (without replicas) with a rabbit servicve alongside flux.
+ - [plain-spindle](plain-spindle): a single node with a serial build of Spindle
+ - [flux-spindle](flux-spindle): a four-node Flux setup with Spindle built with Flux support and the flux plugin.
   
 This is modified from the upstream by:
 
 - Configuring munged so that it can be used by Spindle.
-- Installing Open MPI.
 - Installing Spindle dependencies.
 - Installing Spindle into /home/fluxuser/spindle-inst.
 - Mounting a shared volume to ease access to Spindle debug logs.

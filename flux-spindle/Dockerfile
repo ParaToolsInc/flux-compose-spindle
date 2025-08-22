@@ -5,6 +5,7 @@ ENV workers=${replicas}
 USER root
 
 RUN apt-get update
+RUN apt-get upgrade -y 
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     autotools-dev \
     autoconf \
@@ -19,9 +20,6 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     dnsutils \
     iputils-ping \
     python3-pip \
-    openmpi-common \
-    openmpi-bin \
-    libopenmpi-dev \
     libgcrypt20 \
     libgcrypt20-dev \
     software-properties-common
@@ -37,6 +35,15 @@ RUN mkdir -p ${STATE_DIR} /etc/flux/system /etc/flux/system/cron.d /etc/flux/con
     flux R encode --hosts="node-[1-${workers}]" > /etc/flux/system/R && \
     chown -R fluxuser:fluxuser /run/flux ${STATE_DIR} /mnt/curve/curve.cert ${workdir}
 
+WORKDIR /home/fluxuser
+RUN wget https://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmarks-7.5.1.tar.gz &&\
+    tar xvzf osu-micro-benchmarks-7.5.1.tar.gz && \
+    cd /home/fluxuser/osu-micro-benchmarks-7.5.1 && \
+    ./configure CC=mpicc CXX=mpicxx && \
+    make -j8 && \
+    make install
+
+WORKDIR /home/fluxuser
 RUN git clone https://github.com/hpc/Spindle.git /home/fluxuser/Spindle && \
     mkdir -p /home/fluxuser/Spindle-build && \
     cd /home/fluxuser/Spindle-build && \
@@ -57,5 +64,7 @@ RUN pip3 install --upgrade pip && \
 USER fluxuser
 WORKDIR /home/fluxuser/
 COPY ./scripts/entrypoint.sh ./
+COPY ./examples ./examples
 ENV PATH /home/fluxuser/Spindle-inst/bin:$PATH
+ENV HWLOC_HIDE_ERRORS 2
 ENTRYPOINT /bin/bash /home/fluxuser/entrypoint.sh

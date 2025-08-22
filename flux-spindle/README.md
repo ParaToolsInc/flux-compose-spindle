@@ -17,10 +17,6 @@ You can first build the images (used for workers and broker):
 docker compose build
 ```
 
-Note this will trigger three builds, so be careful! If you want to build just once,
-you can build the [replicas example](../replicas) example first that will derive the same
-layers (and they will then be reused).
-
 ### 2. Start Cluster
 
 Then bring them up! You'll see the rabbit image pull if you don't have it already. 
@@ -37,11 +33,10 @@ docker compose ps
 ```
 ```console
 NAME                COMMAND                  SERVICE             STATUS              PORTS
-basic-node-1        "/bin/sh -c '/bin/ba…"   node                running             
-basic-node-2        "/bin/sh -c '/bin/ba…"   node                running             
-basic-node-3        "/bin/sh -c '/bin/ba…"   node                running             
-basic-node-4        "/bin/sh -c '/bin/ba…"   node                running             
-rabbitmq            "docker-entrypoint.s…"   rabbit              running             4369/tcp, 5671/tcp, 0.0.0.0:5672->5672/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:15672->15672/tcp
+node-1        "/bin/sh -c '/bin/ba…"   node                running             
+node-2        "/bin/sh -c '/bin/ba…"   node                running             
+node-3        "/bin/sh -c '/bin/ba…"   node                running             
+node-4        "/bin/sh -c '/bin/ba…"   node                running             
 ```
 
 Since we have defined the containers separately, to look at logs we can target any individual one:
