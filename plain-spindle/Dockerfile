@@ -40,6 +40,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update \
         g++-13 \
         gcc-14 \
         g++-14 \
+        gdb \
         libffi-dev \
         python3-dev \
         python3-pip \
@@ -67,6 +68,8 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update \
         iputils-ping \
         libgcrypt20 \
         libgcrypt20-dev \
+        silversearcher-ag \
+        fd-find \
         software-properties-common
 
 COPY scripts/fetch-and-build-mpich.sh /fetch-and-build-mpich.sh
