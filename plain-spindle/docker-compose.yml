@@ -5,4 +5,6 @@ services:
     hostname: spindlenode
     container_name: spindlenode
     tty: true
+    cap_add:
+      - SYS_NICE
 

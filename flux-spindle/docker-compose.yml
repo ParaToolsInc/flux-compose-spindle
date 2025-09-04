@@ -1,5 +1,5 @@
 # Shared number of replicas (workers) for build and runtime
-# This includes the broker
+# This includes the broker.
 x-shared-workers:
   &workers
   replicas: 4
@@ -40,6 +40,8 @@ services:
       - flux
     environment: *shared-environment
     volumes: *shared-volumes
+    cap_add:
+      - SYS_NICE
 
   node-2:
     build:
@@ -51,6 +53,8 @@ services:
       - flux
     environment: *shared-environment
     volumes: *shared-volumes
+    cap_add:
+      - SYS_NICE
 
   node-3:
     build:
@@ -62,6 +66,8 @@ services:
       - flux
     environment: *shared-environment
     volumes: *shared-volumes
+    cap_add:
+      - SYS_NICE
 
   node-4:
     build:
@@ -73,4 +79,6 @@ services:
       - flux
     environment: *shared-environment
     volumes: *shared-volumes
+    cap_add:
+      - SYS_NICE
 

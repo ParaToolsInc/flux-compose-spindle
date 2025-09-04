@@ -22,6 +22,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     python3-pip \
     libgcrypt20 \
     libgcrypt20-dev \
+    gdb \
     software-properties-common
 
 RUN sh -c "printf \"fluxuser ALL=(ALL) NOPASSWD: ALL\\n\" >> /etc/sudoers"
@@ -44,12 +45,8 @@ RUN wget https://mvapich.cse.ohio-state.edu/download/mvapich/osu-micro-benchmark
     make install
 
 WORKDIR /home/fluxuser
-RUN git clone https://github.com/hpc/Spindle.git /home/fluxuser/Spindle && \
-    mkdir -p /home/fluxuser/Spindle-build && \
-    cd /home/fluxuser/Spindle-build && \
-    ../Spindle/configure --prefix=/home/fluxuser/Spindle-inst --enable-sec-munge --with-rm=flux --enable-flux-plugin --with-localstorage=/tmp && \
-    make -j8 && \
-    make install
+COPY scripts/build_spindle.sh /home/fluxuser/build_spindle.sh
+RUN ./build_spindle.sh
 
 WORKDIR /home/fluxuser
 RUN pip3 install --upgrade pip && \
@@ -67,4 +64,5 @@ COPY ./scripts/entrypoint.sh ./
 COPY ./examples ./examples
 ENV PATH /home/fluxuser/Spindle-inst/bin:$PATH
 ENV HWLOC_HIDE_ERRORS 2
+ENV RDMAV_FORK_SAFE 1
 ENTRYPOINT /bin/bash /home/fluxuser/entrypoint.sh

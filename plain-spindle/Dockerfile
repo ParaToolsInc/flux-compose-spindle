@@ -5,8 +5,11 @@ USER root
 RUN DEBIAN_FRONTEND="noninteractive" apt-get update \
 # install latest pkg utils:
  && apt-get -qq install -y --no-install-recommends \
-        apt-utils \
- && apt-get -qq install -y --no-install-recommends \
+        apt-utils
+
+RUN yes | unminimize
+
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -qq install -y --no-install-recommends \
         locales \
         ca-certificates \
         wget \
@@ -16,14 +19,8 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update \
         ssh \
         sudo \
         vim \
-        luarocks \
         munge \
-        lcov \
-        ccache \
-        lua5.2 \
-        lua5.2-posix-dev \
         valgrind \
-        jq \
         build-essential \
         pkg-config \
         autotools-dev \
@@ -33,25 +30,17 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update \
         make \
         cmake \
         ninja-build \
-        gfortran \
-        clang-18 \
-        clang-tools-18 \
+        gfortran-13 \
         gcc-13 \
         g++-13 \
-        gcc-14 \
-        g++-14 \
         gdb \
         libffi-dev \
         python3-dev \
         python3-pip \
         python3-setuptools \
         python3-wheel \
-        libsodium-dev \
-        libzmq3-dev \
-        libjansson-dev \
         libmunge-dev \
         libncursesw5-dev \
-        liblua5.2-dev \
         liblz4-dev \
         libsqlite3-dev \
         uuid-dev \
@@ -70,10 +59,12 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update \
         libgcrypt20-dev \
         silversearcher-ag \
         fd-find \
+        mpich \
+        libmpich-dev \
         software-properties-common
 
-COPY scripts/fetch-and-build-mpich.sh /fetch-and-build-mpich.sh
-RUN /fetch-and-build-mpich.sh
+#COPY scripts/fetch-and-build-mpich.sh /fetch-and-build-mpich.sh
+#RUN /fetch-and-build-mpich.sh
 
 ENV HWLOC_COMPONENTS=-gl
 
@@ -93,7 +84,6 @@ RUN ./build_spindle.sh
 
 COPY ./scripts/entrypoint.sh /home/$USER/entrypoint.sh
 ENV PATH /home/$USER/Spindle-inst/bin:$PATH
-ENV LD_LIBRARY_PATH /usr/lib:$LD_LIBRARY_PATH
 COPY ./examples/mpi-hello.c ./
 ENTRYPOINT /bin/bash ./entrypoint.sh
 
