@@ -7,7 +7,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update \
  && apt-get -qq install -y --no-install-recommends \
         apt-utils
 
-RUN yes | unminimize
+#RUN yes | unminimize
 
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -qq install -y --no-install-recommends \
         locales \
@@ -20,7 +20,6 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -qq install -y --no-install-recomme
         sudo \
         vim \
         munge \
-        valgrind \
         build-essential \
         pkg-config \
         autotools-dev \

@@ -25,6 +25,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     gdb \
     software-properties-common
 
+# Allow fluxuser to run as other users so it can start munged
 RUN sh -c "printf \"fluxuser ALL=(ALL) NOPASSWD: ALL\\n\" >> /etc/sudoers"
 
 # These are the STATE_DIR, system, and resources directories
